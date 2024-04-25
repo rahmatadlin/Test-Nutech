@@ -11,7 +11,7 @@ const authentication = require("../middlewares/authentication");
 router.post("/register", Controller.register);
 router.post("/login", Controller.login);
 
-router.use(authentication); // Perlu dilakukan authentication terlebih dahulu
+// router.use(authentication); // Perlu dilakukan authentication terlebih dahulu
 
 router.get("/products", Controller.getProducts);
 router.post("/products", Controller.postProduct);

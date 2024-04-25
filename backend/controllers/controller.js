@@ -4,7 +4,7 @@ const { createToken } = require("../helpers/jwt");
 const { User, Product } = require("../models");
 const validator = require("validator");
 const moment = require("moment");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const ExcelJS = require("exceljs");
 // Jangan lupa error handler sesuaikan dengan api docs
 
@@ -151,8 +151,8 @@ class Controller {
 
   static async getProducts(req, res, next) {
     try {
-      const { page = 1, limit = 10, search, category } = req.query;
-
+      const { page = 1, limit = 10, search, category, sort } = req.query;
+  
       const whereCondition = {};
       if (search) {
         whereCondition.name = { [Op.iLike]: `%${search}%` };
@@ -160,13 +160,21 @@ class Controller {
       if (category) {
         whereCondition.kategori = category;
       }
-
+  
+      let order = [];
+      if (sort === 'created_asc') {
+        order.push(['createdAt', 'ASC']);
+      } else if (sort === 'created_desc') {
+        order.push(['createdAt', 'DESC']);
+      }
+  
       const { count, rows } = await Product.findAndCountAll({
         where: whereCondition,
         limit: limit,
         offset: (page - 1) * limit,
+        order: order, // Menambahkan pengaturan urutan
       });
-
+  
       res.status(200).json({ total: count, products: rows });
     } catch (error) {
       next(error);

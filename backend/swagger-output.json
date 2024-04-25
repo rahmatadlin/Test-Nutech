@@ -98,6 +98,11 @@
             "name": "category",
             "in": "query",
             "type": "string"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
